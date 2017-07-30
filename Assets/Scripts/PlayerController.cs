@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour {
 
 		health.OnDeath += () => {
 			Debug.Log("the player died!");
+			Destroy(gameObject);
 		};
 	}
 
