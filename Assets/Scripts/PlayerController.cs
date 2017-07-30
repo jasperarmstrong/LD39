@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-	public bool isDead;
-
-	float moveSpeed = 7;
 	float turnSpeed = 3.5f;
-
-	float horizontal, vertical;
-
-	[SerializeField] LayerMask moveLayerMask;
 
 	[SerializeField] GameObject gun;
 	[SerializeField] Transform gunShootSpot;
@@ -18,12 +11,16 @@ public class PlayerController : MonoBehaviour {
 	float gunShootCost = 0.01f;
 	float gunCharge = 1f;
 
-	Rigidbody2D rb;
-	CircleCollider2D col;
+	Movement mov;
+	Health health;
 
 	void Start() {
-		rb = GetComponent<Rigidbody2D>();
-		col = GetComponent<CircleCollider2D>();
+		mov = GetComponent<Movement>();
+		health = GetComponent<Health>();
+
+		health.OnDeath += () => {
+			Debug.Log("the player died!");
+		};
 	}
 
 	void Shoot() {
@@ -31,20 +28,6 @@ public class PlayerController : MonoBehaviour {
 			gunCharge -= gunShootCost;
 			Instantiate(laserPrefab, gunShootSpot.position, gunShootSpot.rotation);
 		}
-	}
-
-	void Move() {
-		float moveFactor = moveSpeed * Time.deltaTime;
-		Vector2 moveVector = new Vector2(horizontal * moveFactor, vertical * moveFactor);
-		
-		RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, col.radius, moveVector.normalized, moveVector.magnitude, moveLayerMask);
-
-		foreach(RaycastHit2D hit in hits) {
-			if (Vector2.Dot(hit.point - (Vector2)transform.position, moveVector.normalized) > 0) {
-				moveVector += hit.normal * moveFactor;
-			}
-		}
-		transform.position += (Vector3)moveVector;
 	}
 
 	void FaceMouse() {
@@ -68,14 +51,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (isDead) {
+		if (health.isDead) {
 			return;
 		}
 
-		horizontal = Input.GetAxisRaw("Horizontal");
-		vertical = Input.GetAxisRaw("Vertical");
-
-		Move();
+		mov.Move(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 		FaceMouse();
 		DoGunStuff();
 	}

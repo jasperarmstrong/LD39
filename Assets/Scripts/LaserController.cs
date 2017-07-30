@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,9 +9,11 @@ public class LaserController : MonoBehaviour {
 	float speed = 16;
 
 	bool hasHit = false;
+	Action onHit;
 
 	void Update () {
 		if (hasHit) {
+			onHit?.Invoke();
 			Destroy(gameObject);
 		}
 
@@ -20,6 +23,9 @@ public class LaserController : MonoBehaviour {
 		if (hit) {
 			hasHit = true;
 			transform.position += hit.distance * moveVector.normalized;
+			onHit = () => {
+				hit.transform.GetComponent<Health>()?.Damage(DamageType.LASER);
+			};
 		} else {
 			transform.position += moveVector;
 		}
