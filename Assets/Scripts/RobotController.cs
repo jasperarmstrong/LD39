@@ -7,8 +7,11 @@ public class RobotController : MonoBehaviour {
 	float turnSpeed = 6;
 	float detectionRadius = 10;
 
-	float cooldownAmount = 0.75f;
+	float cooldownDuration = 0.75f;
 	bool canAttack = true;
+
+	float stunDuration = 0.15f;
+	bool canMove = true;
 
 	Movement mov;
 	Health health;
@@ -27,6 +30,12 @@ public class RobotController : MonoBehaviour {
 
 		health.OnDeath += () => {
 			RobotSpawner.HandleDeath(this);
+		};
+
+		health.OnDamage += (DamageType dt) => {
+			if (dt == DamageType.LASER) {
+				StartCoroutine(Stun());
+			}	
 		};
 	}
 	
@@ -49,9 +58,16 @@ public class RobotController : MonoBehaviour {
 		}
 	}
 
+	IEnumerator Stun() {
+		canMove = false;
+		yield return new WaitForSeconds(stunDuration);
+		canMove = true;
+		yield return null;
+	}
+
 	IEnumerator Cooldown() {
 		canAttack = false;
-		yield return new WaitForSeconds(cooldownAmount);
+		yield return new WaitForSeconds(cooldownDuration);
 		canAttack = true;
 		yield return null;
 	}
@@ -71,7 +87,9 @@ public class RobotController : MonoBehaviour {
 		if (target == null) {
 			FindTarget();
 		} else {
-			GoToTarget();
+			if (canMove) {
+				GoToTarget();
+			}
 		}
 
 		foreach(Health h in mov.healthCollisions) {

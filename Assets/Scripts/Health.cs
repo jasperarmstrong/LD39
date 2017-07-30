@@ -15,6 +15,7 @@ public class Health : MonoBehaviour {
 	public float robotDamage = 0.5f;
 
 	public Action OnDeath;
+	public Action<DamageType> OnDamage;
 
 	void CheckHealth() {
 		if (health <= 0) {
@@ -28,10 +29,12 @@ public class Health : MonoBehaviour {
 		switch (damageType) {
 			case DamageType.LASER:
 				health -= laserDamage;
+				OnDamage?.Invoke(damageType);
 				CheckHealth();
 				break;
 			case DamageType.ROBOT:
 				health -= robotDamage;
+				OnDamage?.Invoke(damageType);
 				CheckHealth();
 				break;
 			default:
