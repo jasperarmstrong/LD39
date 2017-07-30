@@ -10,6 +10,7 @@ public enum DamageType {
 public class Health : MonoBehaviour {
 	public float health = 1;
 	public bool isDead = false;
+	public bool isInvincible = false;
 
 	public float laserDamage = 0.5f;
 	public float robotDamage = 0.5f;
@@ -26,6 +27,10 @@ public class Health : MonoBehaviour {
 	}
 
 	public void Damage(DamageType damageType) {
+		if (isInvincible) {
+			return;
+		}
+		
 		switch (damageType) {
 			case DamageType.LASER:
 				health -= laserDamage;

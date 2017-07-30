@@ -91,11 +91,20 @@ public class RobotController : MonoBehaviour {
 				GoToTarget();
 			}
 		}
+	}
 
-		foreach(Health h in mov.healthCollisions) {
-			if (h != null && h.GetComponent<RobotController>() == null) {
-				TryAttack(h);
-			}
+	void OnCollision(Collision2D col) {
+		Health h = col.transform.GetComponent<Health>();
+		if (h != null && h.GetComponent<RobotController>() == null) {
+			TryAttack(h);
 		}
+	}
+
+	void OnCollisionEnter2D(Collision2D col) {
+		OnCollision(col);
+	}
+
+	void OnCollisionStay2D(Collision2D col) {
+		OnCollision(col);
 	}
 }

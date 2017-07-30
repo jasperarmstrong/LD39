@@ -8,6 +8,8 @@ public class FollowTarget : MonoBehaviour {
 	[SerializeField] Vector3 offset;
 
 	void LateUpdate () {
-		transform.position = Vector3.Lerp(transform.position, target.position + offset, lerpAmount * Time.deltaTime);
+		if (target != null) {
+			transform.position = Vector3.Lerp(transform.position, target.position + offset, lerpAmount * Time.deltaTime);
+		}
 	}
 }

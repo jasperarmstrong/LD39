@@ -6,16 +6,14 @@ public class Movement : MonoBehaviour {
 	[SerializeField] private float moveSpeed = 8;
 	[SerializeField] LayerMask moveLayerMask;
 
+	public bool canMove = true;
+
+	Rigidbody2D rb;
 	Collider2D col;
 
-	[SerializeField] bool trackHealthCollisions = false;
-	public List<Health> healthCollisions;
-
 	void Start() {
+		rb = GetComponent<Rigidbody2D>();
 		col = GetComponent<Collider2D>();
-		if (trackHealthCollisions) {
-			healthCollisions = new List<Health>();
-		}
 	}
 
 	float GetDistanceToEdge() {
@@ -33,13 +31,20 @@ public class Movement : MonoBehaviour {
 	}
 
 	public void Move(float horizontal, float vertical, Space relativeTo = Space.World) {
+		if (
+			!canMove ||
+			(Mathf.Abs(horizontal) < 0.01f && Mathf.Abs(vertical) < 0.01f)
+		) {
+			return;
+		}
+
+		rb.velocity = Vector3.zero;
+
 		float moveFactor = moveSpeed * Time.deltaTime;
 		Vector2 moveVector = new Vector2(horizontal, vertical).normalized * moveFactor;
 		if (relativeTo == Space.Self) {	
 			moveVector = transform.TransformDirection(moveVector);
 		}
-
-		healthCollisions?.Clear();
 
 		RaycastHit2D[] hits = Physics2D.CircleCastAll(
 			transform.position,
@@ -54,13 +59,8 @@ public class Movement : MonoBehaviour {
 				continue;
 			}
 
-			Health h = hit.transform.GetComponent<Health>();
-			if (h != null) {
-				healthCollisions?.Add(h);
-			}
-
 			if (Vector2.Dot(hit.point - (Vector2)transform.position, moveVector.normalized) > 0) {
-				moveVector += hit.normal * moveFactor;
+				moveVector += hit.normal * moveFactor * 0.65f;
 			}
 		}
 		transform.position += (Vector3)moveVector;
