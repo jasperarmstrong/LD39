@@ -35,18 +35,16 @@ public class PlayerController : MonoBehaviour {
 
 	void Move() {
 		float moveFactor = moveSpeed * Time.deltaTime;
-		Vector3 moveVector = new Vector3(horizontal * moveFactor, vertical * moveFactor);
+		Vector2 moveVector = new Vector2(horizontal * moveFactor, vertical * moveFactor);
 		
 		RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, col.radius, moveVector.normalized, moveVector.magnitude, moveLayerMask);
 
 		foreach(RaycastHit2D hit in hits) {
-			if (hit && Vector3.Dot(hit.transform.position - transform.position, moveVector.normalized) > 0) {
-				if (moveVector.magnitude > hit.distance) {
-					moveVector = moveVector.normalized * hit.distance;
-				}
+			if (Vector2.Dot(hit.point - (Vector2)transform.position, moveVector.normalized) > 0) {
+				moveVector += hit.normal * moveFactor;
 			}
 		}
-		transform.position += moveVector;
+		transform.position += (Vector3)moveVector;
 	}
 
 	void FaceMouse() {
