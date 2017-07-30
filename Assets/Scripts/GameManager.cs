@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
 	static GameManager gm;
 
 	public static bool isGameOver = false;
+	public static PlayerController pc;
 
 	void Awake() {
 		if (gm == null) {

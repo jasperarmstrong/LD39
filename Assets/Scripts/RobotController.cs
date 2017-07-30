@@ -26,7 +26,7 @@ public class RobotController : MonoBehaviour {
 		health = GetComponent<Health>();
 
 		health.OnDeath += () => {
-			Destroy(gameObject);	
+			RobotSpawner.HandleDeath(this);
 		};
 	}
 	
@@ -75,7 +75,9 @@ public class RobotController : MonoBehaviour {
 		}
 
 		foreach(Health h in mov.healthCollisions) {
-			TryAttack(h);
+			if (h != null && h.GetComponent<RobotController>() == null) {
+				TryAttack(h);
+			}
 		}
 	}
 }

@@ -14,7 +14,15 @@ public class PlayerController : MonoBehaviour {
 	Movement mov;
 	Health health;
 
+	public bool isDead {
+		get {
+			return health?.isDead ?? false;
+		}
+	}
+
 	void Start() {
+		GameManager.pc = this;
+
 		mov = GetComponent<Movement>();
 		health = GetComponent<Health>();
 
