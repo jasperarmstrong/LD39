@@ -30,7 +30,7 @@ public class Movement : MonoBehaviour {
 		Move(vec.x, vec.y, relativeTo);
 	}
 
-	public void Move(float horizontal, float vertical, Space relativeTo = Space.World) {
+	public void Move(float horizontal, float vertical, Space relativeTo = Space.World, float multiplier = 1) {
 		if (
 			!canMove ||
 			(Mathf.Abs(horizontal) < 0.01f && Mathf.Abs(vertical) < 0.01f)
@@ -41,7 +41,7 @@ public class Movement : MonoBehaviour {
 		rb.velocity = Vector3.zero;
 
 		float moveFactor = moveSpeed * Time.deltaTime;
-		Vector2 moveVector = new Vector2(horizontal, vertical).normalized * moveFactor;
+		Vector2 moveVector = new Vector2(horizontal, vertical).normalized * moveFactor * multiplier;
 		if (relativeTo == Space.Self) {	
 			moveVector = transform.TransformDirection(moveVector);
 		}
