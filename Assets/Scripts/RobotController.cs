@@ -47,6 +47,10 @@ public class RobotController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (health.isDead || GameManager.isGameOver) {
+			return;
+		}
+
 		if (target == null) {
 			FindTarget();
 		} else {

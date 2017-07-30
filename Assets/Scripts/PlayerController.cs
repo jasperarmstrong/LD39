@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (health.isDead) {
+		if (health.isDead || GameManager.isGameOver) {
 			return;
 		}
 
