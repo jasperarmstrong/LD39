@@ -8,8 +8,14 @@ public class Movement : MonoBehaviour {
 
 	Collider2D col;
 
+	[SerializeField] bool trackHealthCollisions = false;
+	public List<Health> healthCollisions;
+
 	void Start() {
 		col = GetComponent<Collider2D>();
+		if (trackHealthCollisions) {
+			healthCollisions = new List<Health>();
+		}
 	}
 
 	float GetDistanceToEdge() {
@@ -33,6 +39,8 @@ public class Movement : MonoBehaviour {
 			moveVector = transform.TransformDirection(moveVector);
 		}
 
+		healthCollisions?.Clear();
+
 		RaycastHit2D[] hits = Physics2D.CircleCastAll(
 			transform.position,
 			GetDistanceToEdge(),
@@ -44,6 +52,11 @@ public class Movement : MonoBehaviour {
 		foreach(RaycastHit2D hit in hits) {
 			if (hit.transform == transform) {
 				continue;
+			}
+
+			Health h = hit.transform.GetComponent<Health>();
+			if (h != null) {
+				healthCollisions?.Add(h);
 			}
 
 			if (Vector2.Dot(hit.point - (Vector2)transform.position, moveVector.normalized) > 0) {
