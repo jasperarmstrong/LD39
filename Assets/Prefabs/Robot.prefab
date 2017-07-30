@@ -57,7 +57,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 0.05
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -106,8 +106,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   canMove: 1
-  trackHealthCollisions: 1
-  healthCollisions: []
 --- !u!114 &114148682337317384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,6 +119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   isDead: 0
+  isInvincible: 0
   laserDamage: 0.5
   robotDamage: 0.5
 --- !u!114 &114545086420958712

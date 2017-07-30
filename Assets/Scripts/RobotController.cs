@@ -7,7 +7,7 @@ public class RobotController : MonoBehaviour {
 	float turnSpeed = 6;
 	float detectionRadius = 10;
 
-	float cooldownDuration = 0.75f;
+	float cooldownDuration = 0.8f;
 	bool canAttack = true;
 
 	float stunDuration = 0.15f;

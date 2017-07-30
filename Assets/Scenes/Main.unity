@@ -383,6 +383,9 @@ MonoBehaviour:
   robotPrefab: {fileID: 1806997364293590, guid: b63f51594fb634c8b9dc45df6ed0df31,
     type: 2}
   floor: {fileID: 1804723014}
+  cantSpawnLayerMask:
+    serializedVersion: 2
+    m_Bits: 1792
   maxRobots: 8
   numRobots: 0
 --- !u!1 &163145255
@@ -621,8 +624,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967039
   canMove: 1
-  trackHealthCollisions: 0
-  healthCollisions: []
 --- !u!114 &901505945
 MonoBehaviour:
   m_ObjectHideFlags: 0
