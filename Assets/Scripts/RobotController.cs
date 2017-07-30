@@ -22,6 +22,8 @@ public class RobotController : MonoBehaviour {
 	bool isDancing = false;
 	float danceAmount = 0;
 
+	float scootDirection = 0;
+
 	void OnDrawGizmosSelected() {
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, detectionRadius);
@@ -40,6 +42,8 @@ public class RobotController : MonoBehaviour {
 				StartCoroutine(Stun());
 			}	
 		};
+
+		scootDirection = Random.Range(0, 2) == 0 ? -1 : 1;
 	}
 	
 	void FindTarget() {
@@ -115,15 +119,15 @@ public class RobotController : MonoBehaviour {
 	}
 
 	void OnCollision(Collision2D col) {
+		if (GameManager.pc?.isDead ?? true || GameManager.isGameOver) {
+			return;
+		}
 		Health h = col.transform.GetComponent<Health>();
 		if (h != null) {
 			if (h.GetComponent<RobotController>() == null) {
 				TryAttack(h);
-			} else {
-				if (GameManager.pc?.isDead ?? true || GameManager.isGameOver) {
-					return;
-				}
-				mov.Move(Random.Range(-1f, 1f), 0, Space.Self);	
+			} else if (Vector2.Dot((Vector2)(col.transform.position - transform.position).normalized, (Vector2)transform.up) > 0) {
+				mov.Move(Random.Range(0f, 1f) * scootDirection, 0, Space.Self);	
 			}
 		}
 
