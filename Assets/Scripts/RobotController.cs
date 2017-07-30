@@ -7,6 +7,9 @@ public class RobotController : MonoBehaviour {
 	float turnSpeed = 6;
 	float detectionRadius = 10;
 
+	float cooldownAmount = 0.75f;
+	bool canAttack = true;
+
 	Movement mov;
 	Health health;
 
@@ -30,7 +33,7 @@ public class RobotController : MonoBehaviour {
 	void FindTarget() {
 		RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, detectionRadius, transform.up, 0, targetLayerMask);
 		if (hits.Length > 0) {
-			target = hits.OrderBy(hit => hit.distance).ToArray()[0].transform;
+			target = hits.OrderBy(hit => Vector3.Distance(hit.transform.position, transform.position)).ToArray()[0].transform;
 		}
 	}
 
@@ -46,6 +49,20 @@ public class RobotController : MonoBehaviour {
 		}
 	}
 
+	IEnumerator Cooldown() {
+		canAttack = false;
+		yield return new WaitForSeconds(cooldownAmount);
+		canAttack = true;
+		yield return null;
+	}
+
+	void TryAttack(Health h) {
+		if (canAttack) {
+			StartCoroutine(Cooldown());
+			h.Damage(DamageType.ROBOT);
+		}
+	}
+
 	void Update () {
 		if (health.isDead || GameManager.isGameOver) {
 			return;
@@ -55,6 +72,10 @@ public class RobotController : MonoBehaviour {
 			FindTarget();
 		} else {
 			GoToTarget();
+		}
+
+		foreach(Health h in mov.healthCollisions) {
+			TryAttack(h);
 		}
 	}
 }
