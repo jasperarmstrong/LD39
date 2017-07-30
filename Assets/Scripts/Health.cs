@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum DamageType {
-    LASER
+    LASER, ROBOT
 }
 
 public class Health : MonoBehaviour {
@@ -12,6 +12,7 @@ public class Health : MonoBehaviour {
 	public bool isDead = false;
 
 	public float laserDamage = 0.5f;
+	public float robotDamage = 0.5f;
 
 	public Action OnDeath;
 
@@ -27,6 +28,10 @@ public class Health : MonoBehaviour {
 		switch (damageType) {
 			case DamageType.LASER:
 				health -= laserDamage;
+				CheckHealth();
+				break;
+			case DamageType.ROBOT:
+				health -= robotDamage;
 				CheckHealth();
 				break;
 			default:
