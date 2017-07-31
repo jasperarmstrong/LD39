@@ -122,16 +122,18 @@ public class RobotController : MonoBehaviour {
 		if ((GameManager.pc != null && GameManager.pc.isDead) || GameManager.isGameOver) {
 			return;
 		}
+
+		RobotController rc = col.transform.GetComponent<RobotController>();
 		Health h = col.transform.GetComponent<Health>();
-		if (h != null) {
-			if (h.GetComponent<RobotController>() == null) {
-				TryAttack(h);
-			} else if (Vector2.Dot((Vector2)(col.transform.position - transform.position).normalized, (Vector2)transform.up) > 0) {
-				// if the dot product of those two vectors is > 0, this robot is behind the other robot
-				mov.Move(Random.Range(0f, 1f) * scootDirection, 0, Space.Self);	
-			}
+
+		if (h != null && rc == null && !col.collider.CompareTag("Battery")) {
+			TryAttack(h);
 		}
 
+		if (rc != null && Vector2.Dot((Vector2)(col.transform.position - transform.position).normalized, (Vector2)transform.up) > 0) {
+			// if the dot product of those two vectors is > 0, sidestep because this robot is behind the other robot
+			mov.Move(Random.Range(0f, 1f) * scootDirection, 0, Space.Self);	
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {

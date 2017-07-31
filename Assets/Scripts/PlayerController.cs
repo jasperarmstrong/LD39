@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 	float turnSpeed = 3.5f;
 
+	public Transform itemHolder;
 	[SerializeField] GameObject gun;
 	[SerializeField] Transform gunShootSpot;
 	[SerializeField] GameObject laserPrefab;
@@ -13,6 +14,7 @@ public class PlayerController : MonoBehaviour {
 
 	Movement mov;
 	Health health;
+	InteractionController ic;
 
 	public bool isDead {
 		get {
@@ -30,11 +32,24 @@ public class PlayerController : MonoBehaviour {
 		health = GetComponent<Health>();
 		health.OnDeath += () => {
 			Debug.Log("the player died!");
+			ic.LetGo();
 			Destroy(gameObject);
+			GameManager.GameOver();
+		};
+
+		ic = GetComponentInChildren<InteractionController>();
+		ic.OnGrab = (Grabbable gr) => {
+			gun.SetActive(false);
+		};
+		ic.OnLetGo = (Grabbable gr) => {
+			gun.SetActive(true);
 		};
 	}
 
 	void Shoot() {
+		if (!gun.activeInHierarchy) {
+			return;
+		}
 		if (gunCharge > 0) {
 			gunCharge -= gunShootCost;
 			Instantiate(laserPrefab, gunShootSpot.position, gunShootSpot.rotation);

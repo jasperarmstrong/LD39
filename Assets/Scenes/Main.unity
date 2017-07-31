@@ -233,7 +233,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 82479475}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.602, y: -0.047, z: 0}
+  m_LocalPosition: {x: 0.602, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1518942614}
@@ -346,6 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 125496799}
   - component: {fileID: 125496800}
+  - component: {fileID: 125496801}
   m_Layer: 8
   m_Name: InteractTrigger
   m_TagString: Untagged
@@ -375,12 +376,24 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1
+--- !u!114 &125496801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 125496798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28587e9cdc9574913a9ff997e0c30f82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentInteraction: {fileID: 0}
 --- !u!1 &161814776
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,6 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41517da2b43f74548a31830ad67766f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemHolder: {fileID: 82479476}
   gun: {fileID: 1518942613}
   gunShootSpot: {fileID: 608176139}
   laserPrefab: {fileID: 1368681614047270, guid: c977acb9bc3fc47408575f613e7016bd,
@@ -804,6 +818,10 @@ Prefab:
     - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
       propertyPath: m_RootOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936197850138836, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_TagString
+      value: Battery
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
@@ -1352,6 +1370,56 @@ Transform:
   m_Father: {fileID: 161814777}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1907336970
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 9.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 3.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833679225759728, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936197850138836, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_Name
+      value: Battery (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936197850138836, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+      propertyPath: m_TagString
+      value: Battery
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 4e01dd00812c24ae782a6ae7315b5a58, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &2113432843
 GameObject:
   m_ObjectHideFlags: 0

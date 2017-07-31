@@ -20,7 +20,7 @@ public class LaserController : MonoBehaviour {
 		Vector3 moveVector = speed * Time.deltaTime * hitSpot.up;
 
 		RaycastHit2D hit = Physics2D.Raycast(hitSpot.position, hitSpot.up, moveVector.magnitude);
-		if (hit) {
+		if (hit && !hit.collider.isTrigger) {
 			hasHit = true;
 			transform.position += hit.distance * moveVector.normalized;
 			onHit = () => {

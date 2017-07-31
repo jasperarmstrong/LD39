@@ -10,11 +10,16 @@ public class Grabbable : MonoBehaviour {
 			if (target == null) {
 				break;
 			}
-			transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, 8f * Time.deltaTime);
+
+			float lerpFactor = 8f * Time.deltaTime;
+			transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, lerpFactor);
+			transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, lerpFactor);
+
 			yield return null;
 		}
 		if (target != null) {
-			transform.position = Vector3.zero;
+			transform.localPosition = Vector3.zero;
+			transform.localRotation = Quaternion.identity;
 		}
 	}
 
@@ -26,5 +31,6 @@ public class Grabbable : MonoBehaviour {
 
 	public void LetGo() {
 		this.target = null;
+		transform.SetParent(null);
 	}
 }

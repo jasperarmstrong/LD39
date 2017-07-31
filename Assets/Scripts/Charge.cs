@@ -30,10 +30,4 @@ public class Charge : MonoBehaviour {
 
 		return result;
 	}
-	
-
-
-	void Update () {
-		GiveCharge(0.2f * Time.deltaTime);	
-	}
 }
