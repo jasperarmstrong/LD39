@@ -30,7 +30,7 @@ public class Health : MonoBehaviour {
 		if (isInvincible) {
 			return;
 		}
-		
+
 		switch (damageType) {
 			case DamageType.LASER:
 				health -= laserDamage;
