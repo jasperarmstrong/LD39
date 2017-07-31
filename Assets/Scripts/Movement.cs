@@ -55,7 +55,7 @@ public class Movement : MonoBehaviour {
 		);
 
 		foreach(RaycastHit2D hit in hits) {
-			if (hit.transform == transform) {
+			if (hit.transform == transform || hit.collider.isTrigger) {
 				continue;
 			}
 

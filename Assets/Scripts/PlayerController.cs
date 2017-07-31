@@ -20,9 +20,11 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void Start() {
+	void Awake() {
 		GameManager.pc = this;
+	}
 
+	void Start() {
 		mov = GetComponent<Movement>();
 		
 		health = GetComponent<Health>();
