@@ -12,18 +12,36 @@ public class EMPController : MonoBehaviour {
 	float explosionRadius = 64;
 	float explosionTime = 0.4f;
 
-	bool hasExploded = false;
+	[SerializeField] AudioClip explodeSound;
+	[SerializeField] float explodeVolume = 1f;
+	[SerializeField] AudioClip hurtSound;
+	[SerializeField] float hurtVolume = 1f;
+	[SerializeField] AudioClip explosionSound;
+	[SerializeField] float explosionVolume = 1f;
+
+	public bool hasExploded = false;
 
 	void Start () {
 		energySprite = energyGraphic.GetComponent<SpriteRenderer>();
 
 		health = GetComponent<Health>();
+		health.OnChange += (DamageType dt) => {
+			if (dt != DamageType.NONE) {
+				AudioSource.PlayClipAtPoint(hurtSound, transform.position, hurtVolume * GameManager.sfxVolume);
+			}
+		};
 		health.OnDeath += () => {
 			Debug.Log("emp destroyed!");
+			GameManager.GameOver();
 			Destroy(gameObject);
+			AudioSource.PlayClipAtPoint(explosionSound, transform.position, explosionVolume * GameManager.sfxVolume);
 		};
 
 		charge = GetComponent<Charge>();
+	}
+
+	void Awake() {
+		GameManager.emp = this;
 	}
 
 	void ResetGraphic() {
@@ -32,10 +50,15 @@ public class EMPController : MonoBehaviour {
 
 	IEnumerator Explode() {
 		hasExploded = true;
+		GameObject.FindGameObjectWithTag("Exit")?.GetComponent<ExitController>().Unlock();
 		Debug.Log("the emp went off!");
 
-		GameManager.Win();
+		GameManager.GiveTip("The door has been unlocked, all the robots have been killed, and no more robots will come! Go through the door to escape!");
+
 		RobotSpawner.KillAll();
+		RobotSpawner.rs.shouldSpawn = false;
+
+		AudioSource.PlayClipAtPoint(explodeSound, transform.position, explodeVolume * GameManager.sfxVolume);
 
 		float time = 0;
 		while (time < explosionTime) {
@@ -55,7 +78,7 @@ public class EMPController : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (hasExploded) {
+		if (hasExploded || GameManager.isPaused) {
 			return;
 		}
 

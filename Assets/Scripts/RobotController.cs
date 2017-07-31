@@ -26,6 +26,12 @@ public class RobotController : MonoBehaviour {
 
 	float scootDirection = 0;
 
+	[SerializeField] AudioClip hurtSound;
+	[SerializeField] float hurtVolume = 1f;
+
+	[SerializeField] AudioClip deathSound;
+	[SerializeField] float deathVolume = 1f;
+
 	void OnDrawGizmosSelected() {
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, detectionRadius);
@@ -39,11 +45,14 @@ public class RobotController : MonoBehaviour {
 			GameObject go = (GameObject)Instantiate(deadRobotPrefab, transform.position, transform.rotation);
 			go.transform.Rotate(0, 0, 180);
 			RobotSpawner.HandleDeath(this);
+			AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume * GameManager.sfxVolume);
 		};
 
 		health.OnChange += (DamageType dt) => {
 			if (dt == DamageType.LASER) {
 				StartCoroutine(Stun());
+				target = GameManager.pc.transform;
+				AudioSource.PlayClipAtPoint(hurtSound, transform.position, hurtVolume * GameManager.sfxVolume);
 			}	
 		};
 
@@ -100,6 +109,10 @@ public class RobotController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (GameManager.isPaused) {
+			return;
+		}
+
 		if ((GameManager.pc != null && GameManager.pc.isDead) || GameManager.isGameOver) {
 			if (!isDancing || Random.Range(0, 50) < 1) {
 				isDancing = true;

@@ -10,6 +10,17 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] Transform gunShootSpot;
 	[SerializeField] GameObject laserPrefab;
 	float gunShootCost = 0.01f;
+	
+	[SerializeField] AudioClip laserShootSound;
+	[SerializeField] float laserShootVolume = 1f;
+	[SerializeField] AudioClip hurtSound;
+	[SerializeField] float hurtVolume = 1f;
+	[SerializeField] AudioClip deathSound;
+	[SerializeField] float deathVolume = 1f;
+	[SerializeField] AudioClip pickupSound;
+	[SerializeField] float pickupVolume = 1f;
+	[SerializeField] AudioClip dropSound;
+	[SerializeField] float dropVolume = 1f;
 
 	Movement mov;
 	Health health;
@@ -35,6 +46,14 @@ public class PlayerController : MonoBehaviour {
 			ic?.LetGo();
 			Destroy(gameObject);
 			GameManager.GameOver();
+			AudioSource.PlayClipAtPoint(deathSound, transform.position, deathVolume * GameManager.sfxVolume);
+		};
+		health.OnChange += (DamageType dt) => {
+			if (dt == DamageType.NONE) {
+
+			} else {
+				AudioSource.PlayClipAtPoint(hurtSound, transform.position, hurtVolume * GameManager.sfxVolume);
+			}
 		};
 
 		charge = GetComponent<Charge>();
@@ -42,9 +61,11 @@ public class PlayerController : MonoBehaviour {
 		ic = GetComponentInChildren<InteractionController>();
 		ic.OnGrab = (Grabbable gr) => {
 			gun.SetActive(false);
+			AudioSource.PlayClipAtPoint(pickupSound, transform.position, laserShootVolume * GameManager.sfxVolume);
 		};
 		ic.OnLetGo = (Grabbable gr) => {
 			gun.SetActive(true);
+			AudioSource.PlayClipAtPoint(dropSound, transform.position, laserShootVolume * GameManager.sfxVolume);
 		};
 	}
 
@@ -54,6 +75,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		if (charge.charge > gunShootCost) {
 			charge.TakeCharge(gunShootCost);
+			AudioSource.PlayClipAtPoint(laserShootSound, gunShootSpot.position, laserShootVolume * GameManager.sfxVolume);
 			Instantiate(laserPrefab, gunShootSpot.position, gunShootSpot.rotation);
 		}
 	}
@@ -79,7 +101,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (health.isDead || GameManager.isGameOver) {
+		if (health.isDead || GameManager.isGameOver || GameManager.isPaused) {
 			return;
 		}
 

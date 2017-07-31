@@ -246,6 +246,10 @@ MonoBehaviour:
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 1280
+  hurtSound: {fileID: 8300000, guid: e64549dad0f1541858aa68beacc1f605, type: 3}
+  hurtVolume: 1
+  deathSound: {fileID: 8300000, guid: ea6b547195f9b464487ad86c60c3ca14, type: 3}
+  deathVolume: 1
 --- !u!114 &114558277589977272
 MonoBehaviour:
   m_ObjectHideFlags: 1

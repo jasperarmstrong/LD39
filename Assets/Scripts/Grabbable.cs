@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Grabbable : MonoBehaviour {
 	[SerializeField] LayerMask chargeZoneLayerMask;
-	Transform target;
+	public Transform target;
 
 	IEnumerator LerpPosition() {
 		while ((Vector3.zero - transform.localPosition).magnitude > 0.1f) {

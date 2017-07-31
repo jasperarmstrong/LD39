@@ -34,12 +34,21 @@ public class BatteryZoneDischarge : BatteryZone {
 
 		if (hasGoodBattery) {
 			sr.color = dischargingColor;
+			if (!audioSource.isPlaying) {
+				audioSource.Play();
+			}
 		} else {
 			sr.color = idleColor;
+			if (audioSource.isPlaying) {
+				audioSource.Stop();
+			}			
 		}
 	}
 
 	void Update () {
+		if (GameManager.isPaused) {
+			return;
+		}
 		DischargeBatteries();
 	}
 }

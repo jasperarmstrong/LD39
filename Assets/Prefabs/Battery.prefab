@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 114778939746122220}
   - component: {fileID: 114157104771568280}
   - component: {fileID: 61114910289726786}
+  - component: {fileID: 114345402787858458}
   m_Layer: 13
   m_Name: Battery
   m_TagString: Battery
@@ -179,8 +180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c95b20c217154a6981b9060791cb499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInfinite: 0
   maxCharge: 1
-  charge: 1
+  charge: 0.5
+--- !u!114 &114345402787858458
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1936197850138836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463a78727b6c944dca8884c2b0ed2020, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tip: 
 --- !u!114 &114428866794290400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,6 +269,7 @@ MonoBehaviour:
   chargeZoneLayerMask:
     serializedVersion: 2
     m_Bits: 4096
+  target: {fileID: 0}
 --- !u!114 &114968020002495064
 MonoBehaviour:
   m_ObjectHideFlags: 1

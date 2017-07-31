@@ -6,14 +6,11 @@ public class BatteryZone : MonoBehaviour {
 	protected List<Charge> batteries;
 	[SerializeField] protected SpriteRenderer sr;
 
+	protected AudioSource audioSource;
+
 	void Start() {
 		batteries = new List<Charge>();
-	}
-
-	void Update () {
-		foreach (Charge c in batteries) {
-			Debug.Log(c);
-		}
+		audioSource = GetComponent<AudioSource>();
 	}
 
 	public void AddBattery(Charge charge) {

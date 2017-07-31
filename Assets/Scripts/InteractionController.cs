@@ -11,8 +11,6 @@ public class InteractionController : MonoBehaviour {
 	Transform closestTarget;
 	public Transform currentInteraction;
 
-	bool canInteract = true;
-
 	public Action<Grabbable> OnGrab;
 	public Action<Grabbable> OnLetGo;
 
@@ -52,32 +50,56 @@ public class InteractionController : MonoBehaviour {
 		}
 	}
 
+	void UpdateTip(Transform t) {
+		if (t == null) {
+			GameManager.GiveTip("");
+			return;
+		}
+		Tip tip = t.GetComponent<Tip>();
+		if (tip != null) {
+			GameManager.GiveTip(tip.GetTip());
+		}
+	}
+
 	void Update() {
+		if (GameManager.isPaused || GameManager.isGameOver || GameManager.isGameWon) {
+			return;
+		}
 		Transform target = ClosestInteractableObjectInRange();
-		if (closestTarget == target) {
-			// trigger interaction ui if not already done
-		} else {
-			// disable the ui for the old closest target
+		if (closestTarget != target) {
 			closestTarget = target;
+			UpdateTip(closestTarget);
+		}	
+		if (currentInteraction != null) {
+			UpdateTip(currentInteraction);
 		}
 
-		if (Input.GetKeyDown(KeyCode.E)) {
-			if (currentInteraction == null) {
-				Grabbable gr = closestTarget?.GetComponent<Grabbable>();
-				if (gr != null) {
-					Grab(gr);
-				}
-			} else {
+		if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(1)) {
+			Interactable interactable = closestTarget?.GetComponent<Interactable>();
+			if (currentInteraction != null) {
 				Grabbable gr = currentInteraction?.GetComponent<Grabbable>();
 				if (gr != null) {
 					LetGo(gr);
+				}
+			} else if (interactable != null) {
+				interactable.Interact();
+			} else {
+				Grabbable gr = closestTarget?.GetComponent<Grabbable>();
+				if (gr != null) {
+					Grab(gr);
 				}
 			}
 		}
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {
-		if (col.transform.GetComponent<Grabbable>() != null && !collidingObjects.Contains(col.transform)) {
+		if (
+			(
+				col.transform.GetComponent<Grabbable>() != null || 
+				col.transform.GetComponent<Interactable>() != null ||
+				col.transform.GetComponent<Tip>() != null
+			) && !collidingObjects.Contains(col.transform)
+		) {
 			collidingObjects.Add(col.transform);
 		}
 		col.transform.GetComponent<GunCharger>()?.Enter();
@@ -85,7 +107,13 @@ public class InteractionController : MonoBehaviour {
 	}
 
 	void OnTriggerExit2D(Collider2D col) {
-		if (col.transform.GetComponent<Grabbable>() != null && collidingObjects.Contains(col.transform)) {
+		if (
+			(
+				col.transform.GetComponent<Grabbable>() != null || 
+				col.transform.GetComponent<Interactable>() != null ||
+				col.transform.GetComponent<Tip>() != null
+			) && collidingObjects.Contains(col.transform)
+		) {
 			collidingObjects.Remove(col.transform);
 		}
 		col.transform.GetComponent<GunCharger>()?.Exit();

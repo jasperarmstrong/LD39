@@ -11,6 +11,12 @@ public class GunCharger : MonoBehaviour {
 
 	[SerializeField] SpriteRenderer sr;
 
+	AudioSource audioSource;
+
+	void Start() {
+		audioSource = GetComponent<AudioSource>();
+	}
+
 	public void Enter() {
 		shouldChargeGun = true;
 	}
@@ -20,16 +26,28 @@ public class GunCharger : MonoBehaviour {
 	}
 
 	void Update() {
+		if (GameManager.isPaused) {
+			return;
+		}
 		if (shouldChargeGun) {
 			Charge charge = GameManager.pc?.GetComponent<Charge>();
 			if (charge?.charge < charge?.maxCharge) {
 				charge?.GiveCharge(chargeRate * Time.deltaTime);
 				sr.color = chargingColor;
+				if (!audioSource.isPlaying) {
+					audioSource.Play();
+				}
 			} else {
-				sr.color = idleColor;	
+				sr.color = idleColor;
+				if (audioSource.isPlaying) {
+					audioSource.Stop();
+				}
 			}
 		} else {
 			sr.color = idleColor;
+			if (audioSource.isPlaying) {
+				audioSource.Stop();
+			}
 		}
 	}
 }

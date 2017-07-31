@@ -7,7 +7,7 @@ public class RobotSpawner : MonoBehaviour {
 		public TooManyRobotSpawnFailures( string message ) : base( message ) { }
 	}
 	
-	static RobotSpawner rs;
+	public static RobotSpawner rs;
 
 	SpriteRenderer sr;
 
@@ -23,6 +23,8 @@ public class RobotSpawner : MonoBehaviour {
 	int maxRobotsIncreaseProbability = 32;
 	public int maxRobots = 8;
 
+	public bool shouldSpawn = true;
+
 	public void RollMaxRobotIncrease() {
 		if (Random.Range(0, maxRobotsIncreaseProbability) == 0) {
 			maxRobots++;
@@ -31,6 +33,8 @@ public class RobotSpawner : MonoBehaviour {
 
 	public static void HandleDeath(RobotController robot) {
 		Destroy(robot.gameObject);
+		GameManager.kills++;
+		GameManager.UpdateKillsUI();
 		rs?.RollMaxRobotIncrease();
 	}
 
@@ -68,11 +72,13 @@ public class RobotSpawner : MonoBehaviour {
 	IEnumerator SpawnRobots() {
 		while (!GameManager.isGameOver && !GameManager.isGameWon) {
 			yield return new WaitForSeconds(Random.Range(minSpawnTime, maxSpawnTime));
-			if (GameObject.FindGameObjectsWithTag("Robot").Length < maxRobots) {
-				try {
-					Instantiate(robotPrefab, RandomSpawnLocation(), Quaternion.identity);
-				} catch (System.Exception e) {
-					Debug.Log(e);
+			if (shouldSpawn) {
+				if (GameObject.FindGameObjectsWithTag("Robot").Length < maxRobots) {
+					try {
+						Instantiate(robotPrefab, RandomSpawnLocation(), Quaternion.identity);
+					} catch (System.Exception e) {
+						Debug.Log(e);
+					}
 				}
 			}
 		}
