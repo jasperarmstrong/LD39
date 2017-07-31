@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour {
 
 	Movement mov;
 	Health health;
-	Rigidbody2D rb;
 
 	public bool isDead {
 		get {
@@ -31,8 +30,6 @@ public class PlayerController : MonoBehaviour {
 			Debug.Log("the player died!");
 			Destroy(gameObject);
 		};
-
-		rb = GetComponent<Rigidbody2D>();
 	}
 
 	void Shoot() {

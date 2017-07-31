@@ -18,10 +18,18 @@ public class RobotSpawner : MonoBehaviour {
 	
 	float minSpawnTime = 2, maxSpawnTime = 8;
 
+	int maxRobotsIncreaseProbability = 32;
 	public int maxRobots = 8;
+
+	public void RollMaxRobotIncrease() {
+		if (Random.Range(0, maxRobotsIncreaseProbability) == 0) {
+			maxRobots++;
+		}
+	}
 
 	public static void HandleDeath(RobotController robot) {
 		Destroy(robot.gameObject);
+		rs?.RollMaxRobotIncrease();
 	}
 
 	Vector3 PotentialRandomSpawnLocation() {
@@ -57,7 +65,6 @@ public class RobotSpawner : MonoBehaviour {
 			yield return new WaitForSeconds(Random.Range(minSpawnTime, maxSpawnTime));
 			if (GameObject.FindGameObjectsWithTag("Robot").Length < maxRobots) {
 				try {
-					Vector3 spawnLocation = RandomSpawnLocation();
 					Instantiate(robotPrefab, RandomSpawnLocation(), Quaternion.identity);
 				} catch (System.Exception e) {
 					Debug.Log(e);

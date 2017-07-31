@@ -96,7 +96,7 @@ public class RobotController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (GameManager.pc?.isDead ?? true || GameManager.isGameOver) {
+		if ((GameManager.pc != null && GameManager.pc.isDead) || GameManager.isGameOver) {
 			if (!isDancing || Random.Range(0, 50) < 1) {
 				isDancing = true;
 				RandomizeDanceAmount();	
@@ -105,7 +105,7 @@ public class RobotController : MonoBehaviour {
 			return;
 		}
 
-		if (health.isDead || GameManager.isGameOver) {
+		if (health.isDead) {
 			return;
 		}
 
@@ -119,7 +119,7 @@ public class RobotController : MonoBehaviour {
 	}
 
 	void OnCollision(Collision2D col) {
-		if (GameManager.pc?.isDead ?? true || GameManager.isGameOver) {
+		if ((GameManager.pc != null && GameManager.pc.isDead) || GameManager.isGameOver) {
 			return;
 		}
 		Health h = col.transform.GetComponent<Health>();
