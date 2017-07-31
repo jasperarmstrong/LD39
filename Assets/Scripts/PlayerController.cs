@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField] Transform gunShootSpot;
 	[SerializeField] GameObject laserPrefab;
 	float gunShootCost = 0.01f;
-	float gunCharge = 1f;
 
 	Movement mov;
 	Health health;
+	Charge charge;
 	InteractionController ic;
 
 	public bool isDead {
@@ -32,10 +32,12 @@ public class PlayerController : MonoBehaviour {
 		health = GetComponent<Health>();
 		health.OnDeath += () => {
 			Debug.Log("the player died!");
-			ic.LetGo();
+			ic?.LetGo();
 			Destroy(gameObject);
 			GameManager.GameOver();
 		};
+
+		charge = GetComponent<Charge>();
 
 		ic = GetComponentInChildren<InteractionController>();
 		ic.OnGrab = (Grabbable gr) => {
@@ -50,8 +52,8 @@ public class PlayerController : MonoBehaviour {
 		if (!gun.activeInHierarchy) {
 			return;
 		}
-		if (gunCharge > 0) {
-			gunCharge -= gunShootCost;
+		if (charge.charge > gunShootCost) {
+			charge.TakeCharge(gunShootCost);
 			Instantiate(laserPrefab, gunShootSpot.position, gunShootSpot.rotation);
 		}
 	}

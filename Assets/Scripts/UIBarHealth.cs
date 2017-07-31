@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthBar : UIBar {
+public class UIBarHealth : UIBar {
 	[SerializeField] Health health;
 
 	void Start () {
 		base.BaseStart();
 
-		health.OnDamage += (DamageType dt) => {
+		health.OnChange += (DamageType dt) => {
 			rt.localScale = new Vector3(health.health, 1, 1);
 		};
 	}

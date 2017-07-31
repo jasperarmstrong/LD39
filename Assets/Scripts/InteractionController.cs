@@ -28,6 +28,15 @@ public class InteractionController : MonoBehaviour {
 		return null;
 	}
 
+	void Grab(Grabbable gr) {
+		if (gr == null) {
+			return;
+		}
+		gr.Grab(pc.itemHolder);
+		currentInteraction = closestTarget;
+		OnGrab?.Invoke(gr);
+	}
+
 	void LetGo(Grabbable gr) {
 		if (gr == null) {
 			return;
@@ -38,7 +47,9 @@ public class InteractionController : MonoBehaviour {
 	}
 
 	public void LetGo() {
-		LetGo(currentInteraction?.GetComponent<Grabbable>());
+		if (currentInteraction != null) {
+			LetGo(currentInteraction.GetComponent<Grabbable>());
+		}
 	}
 
 	void Update() {
@@ -54,9 +65,7 @@ public class InteractionController : MonoBehaviour {
 			if (currentInteraction == null) {
 				Grabbable gr = closestTarget?.GetComponent<Grabbable>();
 				if (gr != null) {
-					gr.Grab(pc.itemHolder);
-					currentInteraction = closestTarget;
-					OnGrab?.Invoke(gr);
+					Grab(gr);
 				}
 			} else {
 				Grabbable gr = currentInteraction?.GetComponent<Grabbable>();
@@ -71,11 +80,15 @@ public class InteractionController : MonoBehaviour {
 		if (col.transform.GetComponent<Grabbable>() != null && !collidingObjects.Contains(col.transform)) {
 			collidingObjects.Add(col.transform);
 		}
+		col.transform.GetComponent<GunCharger>()?.Enter();
+		col.transform.GetComponent<HealthRegen>()?.Enter();
 	}
 
 	void OnTriggerExit2D(Collider2D col) {
 		if (col.transform.GetComponent<Grabbable>() != null && collidingObjects.Contains(col.transform)) {
 			collidingObjects.Remove(col.transform);
 		}
+		col.transform.GetComponent<GunCharger>()?.Exit();
+		col.transform.GetComponent<HealthRegen>()?.Exit();
 	}
 }

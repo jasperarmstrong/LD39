@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class RobotController : MonoBehaviour {
 	float turnSpeed = 6;
-	float detectionRadius = 10;
+	float detectionRadius = 20;
 
 	float cooldownDuration = 0.8f;
 	bool canAttack = true;
 
 	float stunDuration = 0.15f;
 	bool canMove = true;
+
+	[SerializeField] GameObject deadRobotPrefab;
 
 	Movement mov;
 	Health health;
@@ -34,10 +36,12 @@ public class RobotController : MonoBehaviour {
 		health = GetComponent<Health>();
 
 		health.OnDeath += () => {
+			GameObject go = (GameObject)Instantiate(deadRobotPrefab, transform.position, transform.rotation);
+			go.transform.Rotate(0, 0, 180);
 			RobotSpawner.HandleDeath(this);
 		};
 
-		health.OnDamage += (DamageType dt) => {
+		health.OnChange += (DamageType dt) => {
 			if (dt == DamageType.LASER) {
 				StartCoroutine(Stun());
 			}	

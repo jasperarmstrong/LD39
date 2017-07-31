@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grabbable : MonoBehaviour {
+	[SerializeField] LayerMask chargeZoneLayerMask;
 	Transform target;
 
 	IEnumerator LerpPosition() {
@@ -26,11 +27,29 @@ public class Grabbable : MonoBehaviour {
 	public void Grab(Transform target) {
 		this.target = target;
 		transform.SetParent(target);
+		transform.gameObject.layer = LayerMask.NameToLayer("GrabbedItem");
 		StartCoroutine(LerpPosition());
+
+		Charge c = GetComponent<Charge>();
+		if (c != null) {
+			Collider2D hit = Physics2D.OverlapCircle(transform.position, GetComponent<Collider2D>()?.bounds.extents.x ?? 0.2f, chargeZoneLayerMask);
+			if (hit) {
+				hit.transform.GetComponent<BatteryZone>()?.RemoveBattery(c);
+			}
+		}
 	}
 
 	public void LetGo() {
 		this.target = null;
 		transform.SetParent(null);
+		transform.gameObject.layer = LayerMask.NameToLayer("Default");
+
+		Charge c = GetComponent<Charge>();
+		if (c != null) {
+			Collider2D hit = Physics2D.OverlapCircle(transform.position, GetComponent<Collider2D>()?.bounds.extents.x ?? 0.2f, chargeZoneLayerMask);
+			if (hit) {
+				hit.transform.GetComponent<BatteryZone>()?.AddBattery(c);
+			}
+		}
 	}
 }

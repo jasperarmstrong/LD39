@@ -9,6 +9,8 @@ public class RobotSpawner : MonoBehaviour {
 	
 	static RobotSpawner rs;
 
+	SpriteRenderer sr;
+
 	[SerializeField] GameObject robotPrefab;
 	[SerializeField] Transform floor;
 
@@ -16,7 +18,7 @@ public class RobotSpawner : MonoBehaviour {
 
 	float minX, maxX, minY, maxY;
 	
-	float minSpawnTime = 2, maxSpawnTime = 8;
+	float minSpawnTime = 1, maxSpawnTime = 6;
 
 	int maxRobotsIncreaseProbability = 32;
 	public int maxRobots = 8;
@@ -32,6 +34,12 @@ public class RobotSpawner : MonoBehaviour {
 		rs?.RollMaxRobotIncrease();
 	}
 
+	public static void KillAll() {
+		foreach (GameObject go in GameObject.FindGameObjectsWithTag("Robot")) {
+			go.GetComponent<Health>().Damage(DamageType.INSTAKILL);
+		}
+	}
+
 	Vector3 PotentialRandomSpawnLocation() {
 		return new Vector3(
 			Random.Range(minX, maxX),
@@ -40,7 +48,7 @@ public class RobotSpawner : MonoBehaviour {
 	}
 
 	bool SpawnLocationCollides(Vector3 location) {
-		return Physics2D.OverlapCircle(location, 0.5f, cantSpawnLayerMask);
+		return Physics2D.OverlapCircle(location, 3, cantSpawnLayerMask);
 	}
 
 	Vector3 RandomSpawnLocation(int numTries = 5) {
@@ -58,10 +66,7 @@ public class RobotSpawner : MonoBehaviour {
 	}
 
 	IEnumerator SpawnRobots() {
-		while (true) {
-			if (GameManager.pc?.isDead ?? false || GameManager.isGameOver) {
-				yield return null;
-			}
+		while (!GameManager.isGameOver && !GameManager.isGameWon) {
 			yield return new WaitForSeconds(Random.Range(minSpawnTime, maxSpawnTime));
 			if (GameObject.FindGameObjectsWithTag("Robot").Length < maxRobots) {
 				try {
@@ -76,10 +81,12 @@ public class RobotSpawner : MonoBehaviour {
 	void Start () {
 		rs = this;
 
-		minX = -(floor.localScale.x / 2) + 1;
-		maxX =  (floor.localScale.x / 2) - 1;
-		minY = -(floor.localScale.y / 2) + 1;
-		maxY =  (floor.localScale.y / 2) - 1;
+		sr = floor.GetComponent<SpriteRenderer>();
+
+		minX = -(sr.size.x / 2) + 1;
+		maxX =  (sr.size.x / 2) - 1;
+		minY = -(sr.size.y / 2) + 1;
+		maxY =  (sr.size.y / 2) - 1;
 
 		StartCoroutine(SpawnRobots());
 	}
