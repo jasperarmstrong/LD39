@@ -12,6 +12,8 @@ public class EMPController : MonoBehaviour {
 	float explosionRadius = 64;
 	float explosionTime = 0.4f;
 
+	[SerializeField] GameObject explosionPrefab;
+
 	[SerializeField] AudioClip explodeSound;
 	[SerializeField] float explodeVolume = 1f;
 	[SerializeField] AudioClip hurtSound;
@@ -35,6 +37,7 @@ public class EMPController : MonoBehaviour {
 			GameManager.GameOver();
 			Destroy(gameObject);
 			AudioSource.PlayClipAtPoint(explosionSound, transform.position, explosionVolume * GameManager.sfxVolume);
+			Instantiate(explosionPrefab, transform.position, transform.rotation);
 		};
 
 		charge = GetComponent<Charge>();

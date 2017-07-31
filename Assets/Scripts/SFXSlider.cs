@@ -7,7 +7,7 @@ public class SFXSlider : MonoBehaviour {
 	[SerializeField] Slider slider;
 
 	void Start () {
-		GameManager.sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 1);
+		GameManager.sfxVolume = PlayerPrefs.GetFloat("sfxVolume", 0.8f);
 		slider.value = GameManager.sfxVolume;
 	}
 	

@@ -75,6 +75,12 @@ public class CheatManager : MonoBehaviour {
 						GameManager.GiveTip("Killed player!");
 					};
 					break;
+				case "BlowUp":
+					c.method = () => {
+						GameManager.emp.GetComponent<Health>().Damage(DamageType.INSTAKILL);
+						GameManager.GiveTip("Killed emp!");
+					};
+					break;
 				default:
 					Debug.Log($"Unimplemented cheat: {c.name}");
 					break;
